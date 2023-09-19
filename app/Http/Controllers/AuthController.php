@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\sendEmail;
+use App\Mail\admin\User_programm_apply;
 use App\Models\User;
+use App\Services\notification\notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -92,4 +95,11 @@ class AuthController extends Controller
             return redirect()->route('home');
         }
     }
+    public function testmail(){
+        $not=resolve(notification::class);
+
+      //  dd($email);
+      SendEmail::dispatch(User::find(1)->email,new User_programm_apply);
+    }
+
 }

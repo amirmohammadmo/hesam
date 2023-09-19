@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\sendEmail;
+use App\Mail\user\Sen_programme;
 use App\Models\Body_profile;
 use App\Models\Food_programm;
 use App\Models\Package;
 use App\Models\Payment;
 use App\Models\Train_programm;
 use App\Models\User;
+use App\Services\notification\notification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -59,6 +62,10 @@ class UserController extends Controller
         if ($save_data instanceof Food_programm) {
             $image = request()->file('food_programme');
             $image->move(public_path('/Food_programme'), $original_file_name);
+            $user_Email_p=Package::find($id);
+           $user_email= $user_Email_p->user->email;
+            $mail=resolve( notification::class);
+            sendEmail::dispatch($user_email,new Sen_programme);
             return redirect()->route('admin.confirmed.user')->with('success', 'سرویس با موفقیت ثبت شد');
         }
 
@@ -95,6 +102,10 @@ class UserController extends Controller
         if ($save_data instanceof Train_programm) {
             $image = request()->file('train_programme');
             $image->move(public_path('/train_programme'), $original_file_name);
+            $user_Email_p=Package::find($id);
+            $user_email= $user_Email_p->user->email;
+            $mail=resolve( notification::class);
+            sendEmail::dispatch($user_email,new Sen_programme);
             return redirect()->route('admin.confirmed.user')->with('success', 'سرویس با موفقیت ثبت شد');
         }
 
