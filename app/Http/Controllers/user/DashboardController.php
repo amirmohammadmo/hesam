@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\sendEmail;
+use App\Mail\admin\User_programm_apply;
 use App\Models\Body_profile;
 use App\Models\Face_time;
 use App\Models\Package;
 use App\Models\Payment;
 use App\Models\User;
+use App\Services\notification\notification;
 use Carbon\Carbon;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
@@ -101,6 +104,8 @@ class DashboardController extends Controller
 
             if ($create_pakage && $body_data_orofile)
             {
+                $noti=resolve(notification::class);
+                sendEmail::dispatch('hesamdaneshgari@gmail.com',new User_programm_apply);
                 return redirect()->route('user.Dashboard')->with('success','اطلاعات شما با موفقیت ثبت شد به زودی برنامه برای شما ارسال میشود');
             }
         }
@@ -128,7 +133,8 @@ class DashboardController extends Controller
        ]);
 
       if ($face_time instanceof Face_time){
-
+         $not=resolve(notification::class);
+         sendEmail::dispatch('hesamdaneshgari@gmail.com',new \App\Mail\admin\face_time);
           return redirect()->route('user.Dashboard')->with('success','وقت شما با موفقیت ثبت شد به زودی با شما تماس گرفته می شود');
       }
     }
